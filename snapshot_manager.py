@@ -14,7 +14,6 @@ from binaryninja import (
 from binaryninja.mainthread import execute_on_main_thread_and_wait
 from binaryninjaui import UIContext
 from datetime import datetime
-from .globals import Globals
 import json
 
 METATDATA_NAME = "snapshot_manager"
@@ -128,11 +127,11 @@ def refresh_tab(ctx, path: str):
     execute_on_main_thread_and_wait(open_tab)
 
 
-def init_snapshot_manager(bv: BinaryView):
+def get_snapshot_manager(bv: BinaryView):
     if bv is None or bv.file.has_database is False:
         return None
     db = bv.file.database
-    snapshot_manager = Globals.primary_manager
+    snapshot_manager = bv.session_data.get(METATDATA_NAME)
     if snapshot_manager is None:
         snapshot_manager = SnapshotManager(bv)
         # load data from bndb upon first creation
@@ -143,20 +142,19 @@ def init_snapshot_manager(bv: BinaryView):
                 for k, v in json.loads(ss_info_json, cls=DataClassDecoder).items()
             }
             snapshot_manager.snapshots = snapshots
-        Globals.primary_manager = snapshot_manager
+        bv.session_data[METATDATA_NAME] = snapshot_manager
     return snapshot_manager
 
 
 def take_snapshot(bv: BinaryView, func: Function):
     if bv.file.has_database is False:
         show_message_box(
-            TITLE, "Database not found. Please save a database first.", icon=MessageBoxIcon.ErrorIcon
+            TITLE,
+            "Database not found. Please save a database first.",
+            icon=MessageBoxIcon.ErrorIcon,
         )
         return
-    snapshot_manager: SnapshotManager = bv.metadata.get(METATDATA_NAME)
-    if snapshot_manager is None:
-        snapshot_manager = init_snapshot_manager(bv)
-        bv.metadata[METATDATA_NAME] = snapshot_manager
+    snapshot_manager: SnapshotManager = get_snapshot_manager(bv)
     db = bv.file.database
     name_text = b""
     while name_text == b"":
@@ -208,10 +206,12 @@ def restore_snapshot(bv: BinaryView, snapshot_id: int):
 def restore_snapshot_callback(bv: BinaryView, func: Function):
     if bv.file.has_database is False:
         show_message_box(
-            TITLE, "Database not found. Please save a database first.", icon=MessageBoxIcon.ErrorIcon
+            TITLE,
+            "Database not found. Please save a database first.",
+            icon=MessageBoxIcon.ErrorIcon,
         )
         return
-    snapshot_manager = init_snapshot_manager(bv)
+    snapshot_manager = get_snapshot_manager(bv)
     if len(snapshot_manager.snapshots) == 0:
         show_message_box(TITLE, "No snapshots found!", icon=MessageBoxIcon.ErrorIcon)
         return
@@ -234,5 +234,7 @@ PluginCommand.register_for_function(
 )
 
 PluginCommand.register_for_function(
-    "Snapshot Manager\\Restore snapshot", "Checkout to saved snapshot", restore_snapshot_callback
+    "Snapshot Manager\\Restore snapshot",
+    "Checkout to saved snapshot",
+    restore_snapshot_callback,
 )

@@ -22,7 +22,7 @@ from PySide6.QtWidgets import (
     QTableWidgetItem,
     QMenu,
 )
-from .snapshot_manager import init_snapshot_manager, restore_snapshot, TITLE
+from .snapshot_manager import get_snapshot_manager, restore_snapshot, TITLE
 
 # adapted from https://github.com/borzacchiello/seninja/blob/master/ui/registers_view.py
 
@@ -48,6 +48,7 @@ def _get_active_binary_view() -> BinaryView:
         return None
     return action_ctx.binaryView
 
+
 class SnapshotWidget(QWidget):
     active_color = QBrush(getThemeColor(ThemeColor.OrangeStandardHighlightColor))
 
@@ -57,7 +58,7 @@ class SnapshotWidget(QWidget):
         self.actionHandler = UIActionHandler()
         self.actionHandler.setupActionHandler(self)
         self.binary_view = _get_active_binary_view()
-        self.data = init_snapshot_manager(self.binary_view)
+        self.data = get_snapshot_manager(self.binary_view)
 
         self.layout = QVBoxLayout()
 
@@ -80,7 +81,11 @@ class SnapshotWidget(QWidget):
     def _refresh(self):
         self.table.clearContents()
         # check for activation of tab before bv is created, also check if db backed
-        if self.data is None or len(self.data.snapshots) == 0 or self.binary_view.file.has_database is False:
+        if (
+            self.data is None
+            or len(self.data.snapshots) == 0
+            or self.binary_view.file.has_database is False
+        ):
             self.table.setRowCount(0)
             return
         snapshots = self.data.snapshots.values()
@@ -89,7 +94,10 @@ class SnapshotWidget(QWidget):
             self.table.setItem(i, 0, _makewidget(self, snapshot.name))
             self.table.setItem(i, 1, _makewidget(self, snapshot.description))
             self.table.setItem(i, 2, _makewidget(self, snapshot.date))
-            if snapshot.id == self.data.find_base_snapshot_id(self.binary_view.file.database, self.binary_view.file.database.current_snapshot.id):
+            if snapshot.id == self.data.find_base_snapshot_id(
+                self.binary_view.file.database,
+                self.binary_view.file.database.current_snapshot.id,
+            ):
                 self.table.item(i, 0).setForeground(self.active_color)
                 self.table.item(i, 1).setForeground(self.active_color)
                 self.table.item(i, 2).setForeground(self.active_color)
@@ -147,6 +155,9 @@ class SnapshotWidget(QWidget):
             restore_snapshot(self.binary_view, snapshot.id)
             # refresh bv as restoring snapshot changes the bv
             self.binary_view = _get_active_binary_view()
+            self.data.binary_view = self.binary_view
+            # refresh snapshot manager as it was tied to the old bv
+            self.data = get_snapshot_manager(self.binary_view)
 
     # double click event
     def on_doubleClick(self, item: QTableWidgetItem):
