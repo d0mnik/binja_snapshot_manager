@@ -190,6 +190,9 @@ class SnapshotWidget(QWidget):
             # account for when bv created, but snapshot manager not created yet
             if self.data is not None:
                 self.data.binary_view = new_bv
+            # account for when bv newly created, but snapshot manager not created yet
+            else:
+                self.data = get_snapshot_manager(new_bv)
         self._refresh()
 
     def notifyOffsetChanged(self, offset):
