@@ -225,6 +225,7 @@ def restore_snapshot_callback(bv: BinaryView, func: Function):
     snapshot_name = snapshot_names[snapshot_idx]
     snapshot_id = snapshot_manager.get_snapshot_by_name(snapshot_name).id
     restore_snapshot(bv, snapshot_id)
+    # bv refresh will be handled by the notifyViewChanged in the widget
 
 
 PluginCommand.register_for_function(

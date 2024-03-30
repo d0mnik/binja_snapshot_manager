@@ -84,6 +84,7 @@ class SnapshotWidget(QWidget):
         if (
             self.data is None
             or len(self.data.snapshots) == 0
+            or self.binary_view is None
             or self.binary_view.file.has_database is False
         ):
             self.table.setRowCount(0)
@@ -153,11 +154,7 @@ class SnapshotWidget(QWidget):
                 self._refresh()
         elif action == restore_ss:
             restore_snapshot(self.binary_view, snapshot.id)
-            # refresh bv as restoring snapshot changes the bv
-            self.binary_view = _get_active_binary_view()
-            self.data.binary_view = self.binary_view
-            # refresh snapshot manager as it was tied to the old bv
-            self.data = get_snapshot_manager(self.binary_view)
+            # bv refresh should happen in notfiyViewChanged
 
     # double click event
     def on_doubleClick(self, item: QTableWidgetItem):
@@ -182,17 +179,10 @@ class SnapshotWidget(QWidget):
             self.data.edit_snapshot(snapshot, snapshot.name, new_desc.decode())
         self._refresh()
 
-    def notifytab(self, newName):
-        self.tabname = newName
-        new_bv = _get_active_binary_view()
-        if new_bv is not None:
-            self.binary_view = new_bv
-            # account for when bv created, but snapshot manager not created yet
-            if self.data is not None:
-                self.data.binary_view = new_bv
-            # account for when bv newly created, but snapshot manager not created yet
-            else:
-                self.data = get_snapshot_manager(new_bv)
+    def notifytab(self, new_name: str, new_bv: BinaryView):
+        self.tabname = new_name
+        self.binary_view = new_bv
+        self.data = get_snapshot_manager(new_bv)
         self._refresh()
 
     def notifyOffsetChanged(self, offset):

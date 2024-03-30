@@ -39,8 +39,9 @@ class SnapshotManagerWidget(SidebarWidget):
         self.main_widget.stateInit()
 
     def notifyViewChanged(self, view_frame):
-        newName = view_frame.getTabName() if view_frame is not None else ""
-        self.main_widget.notifytab(newName)
+        new_name = view_frame.getTabName() if view_frame is not None else ""
+        new_bv = view_frame.getCurrentBinaryView() if view_frame is not None else None
+        self.main_widget.notifytab(new_name, new_bv)
 
 
 class SnapshotManagerWidgetType(SidebarWidgetType):
