@@ -1,29 +1,29 @@
 {
-    "api": [
-        "python3"
-    ],
-    "author": "d0minik",
-    "description": "Binary Ninja plugin to take and manage database snapshots",
-    "license": {
-        "name": "AGPL-3.0",
-        "text": "Copyright 2024 d0minik \n\nThis program is free software; you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU Affero General Public License along with this program; if not, see <http://www.gnu.org/licenses/>."
-    },
-    "longdescription": "",
-    "minimumbinaryninjaversion": 4526,
-    "name": "Binja Snapshot Manager",
-    "platforms": [
-        "Darwin",
-        "Linux",
-        "Windows"
-    ],
+	"api": [
+		"python3"
+	],
+	"author": "d0minik",
+	"description": "Binary Ninja plugin to take and manage database snapshots",
+	"license": {
+		"name": "AGPL-3.0",
+		"text": "Copyright 2024 d0minik \n\nThis program is free software; you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU Affero General Public License along with this program; if not, see <http://www.gnu.org/licenses/>."
+	},
+	"longdescription": "",
+	"minimumbinaryninjaversion": 4526,
+	"name": "Binja Snapshot Manager",
+	"platforms": [
+		"Darwin",
+		"Linux",
+		"Windows"
+	],
 	"installinstructions": {
-      "Darwin": "",
-      "Windows": "",
-      "Linux": ""
-   	},
-    "pluginmetadataversion": 2,
-    "type": [
-        "helper"
-    ],
-    "version": "0.1.0"
+		"Darwin": "",
+		"Windows": "",
+		"Linux": ""
+	},
+	"pluginmetadataversion": 2,
+	"type": [
+		"helper"
+	],
+	"version": "0.1.0"
 }
