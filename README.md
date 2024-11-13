@@ -24,7 +24,7 @@ A UI plugin to take, restore & manage database snapshots of your BNDBs, just lik
 
 or
 
-Install the plugin via rhe plugin manager!
+Install the plugin via the plugin manager!
 
 ## Minimum Version
 
