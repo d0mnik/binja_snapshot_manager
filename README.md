@@ -2,7 +2,7 @@
 
 Author: **d0minik**
 
-_Binary Ninja plugin to manage database snapshots_
+_Binary Ninja plugin to manage database snapshots, inspired by IDA_
 
 ## Description:
 
@@ -21,6 +21,10 @@ A UI plugin to take, restore & manage database snapshots of your BNDBs, just lik
 ## Installation
 
 `git clone` this repo into your Binary Ninja plugins directory.
+
+or
+
+Install the plugin via rhe plugin manager!
 
 ## Minimum Version
 
